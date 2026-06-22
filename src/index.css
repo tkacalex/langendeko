@@ -1,0 +1,261 @@
+/* =========================================================
+   Baudekoration H. Stroh GmbH — Global Styles & Design Tokens
+   Handwerk trifft modern: warme Erdtöne, seriös, klar.
+   ========================================================= */
+
+:root {
+  /* Warme Erdtöne */
+  --cream: #faf6ef;
+  --cream-soft: #f4ecdf;
+  --paper: #ffffff;
+  --sand: #c9a876;
+  --sand-light: #e4d5bc;
+  --sand-dark: #a9854f;
+
+  --anthracite: #23262a;
+  --anthracite-soft: #2f3338;
+  --anthracite-line: #3c4046;
+
+  /* Akzent: warmes Terracotta für CTAs & Highlights */
+  --accent: #b26836;
+  --accent-hover: #9a5829;
+
+  /* Text */
+  --text: #2b2a27;
+  --text-muted: #6f6a62;
+  --text-on-dark: #f3ede2;
+  --text-on-dark-muted: #b7b1a6;
+
+  --border: #e7decf;
+  --border-strong: #d8ccb6;
+
+  /* Typografie */
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* Layout */
+  --container: 1180px;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px rgba(35, 38, 42, 0.06),
+    0 6px 18px rgba(35, 38, 42, 0.05);
+  --shadow-md: 0 10px 30px rgba(35, 38, 42, 0.1);
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  color-scheme: light;
+}
+
+/* ----------------------------- Reset ----------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--cream);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--anthracite);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --------------------------- Utilities --------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.section {
+  padding-block: clamp(64px, 9vw, 120px);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sand-dark);
+  margin-bottom: 18px;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 26px;
+  height: 2px;
+  background: var(--sand);
+}
+
+.section-title {
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  max-width: 18ch;
+}
+
+.section-lead {
+  margin-top: 18px;
+  font-size: 1.08rem;
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid transparent;
+  transition: transform 0.18s var(--ease), background-color 0.18s var(--ease),
+    border-color 0.18s var(--ease), color 0.18s var(--ease);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--border-strong);
+  color: var(--anthracite);
+}
+
+.btn-outline:hover {
+  border-color: var(--anthracite);
+  background: var(--anthracite);
+  color: #fff;
+}
+
+.btn-ghost-light {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(243, 237, 226, 0.35);
+  color: var(--text-on-dark);
+}
+
+.btn-ghost-light:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: var(--text-on-dark);
+}
+
+/* Reveal-on-scroll animation (dezent) */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .btn:hover {
+    transform: none;
+  }
+}
+
+/* Accessibility helper */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 200;
+  background: var(--anthracite);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  transition: top 0.2s var(--ease);
+}
+
+.skip-link:focus {
+  top: 16px;
+}
