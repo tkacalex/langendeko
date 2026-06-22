@@ -152,9 +152,11 @@ function Datenschutz() {
       <h3>3. Kontaktformular &amp; Kontaktaufnahme</h3>
       <p>
         Wenn Sie uns über das Kontaktformular oder per E-Mail kontaktieren,
-        verarbeiten wir die von Ihnen angegebenen Daten (Name, Telefon,
+        verarbeiten wir die von Ihnen angegebenen Daten (Name, E-Mail, Telefon,
         Nachricht) ausschließlich zur Bearbeitung Ihrer Anfrage und zur
-        Angebotserstellung (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO).
+        Angebotserstellung (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO). Die
+        Übermittlung erfolgt verschlüsselt über den Dienst FormSubmit
+        (formsubmit.co) an unsere Geschäfts-E-Mail.
       </p>
 
       <h3>4. Google Maps</h3>

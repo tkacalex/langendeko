@@ -12,6 +12,8 @@ export const company = {
   phone: '06103 - 34278',
   phoneHref: '+49610334278',
   email: 'baudekoration-stroh@t-online.de',
+  /** Empfänger für Angebotsanfragen über das Kontaktformular */
+  inquiryEmail: 'baudekoration-stroh@t-online.de',
   website: 'www.baudekoration-stroh.de',
 } as const
 

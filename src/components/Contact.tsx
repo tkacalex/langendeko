@@ -7,19 +7,59 @@ const mapsQuery = encodeURIComponent(
   `${company.street}, ${company.zip} ${company.city}`,
 )
 
-export default function Contact() {
-  const [sent, setSent] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '', message: '' })
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(company.inquiryEmail)}`
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+type FormStatus = 'idle' | 'loading' | 'success' | 'error'
+
+interface FormData {
+  name: string
+  email: string
+  phone: string
+  message: string
+}
+
+const initialForm: FormData = {
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+}
+
+export default function Contact() {
+  const [status, setStatus] = useState<FormStatus>('idle')
+  const [form, setForm] = useState<FormData>(initialForm)
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Statische Site ohne Backend: Anfrage per vorbefülltem E-Mail-Programm.
-    const subject = encodeURIComponent(`Angebotsanfrage von ${form.name}`)
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nTelefon: ${form.phone}\n\nNachricht:\n${form.message}`,
-    )
-    window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`
-    setSent(true)
+    setStatus('loading')
+
+    try {
+      const response = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message: form.message,
+          _subject: `Angebotsanfrage von ${form.name}`,
+          _template: 'table',
+          _captcha: 'false',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Formular konnte nicht gesendet werden.')
+      }
+
+      setForm(initialForm)
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -38,7 +78,6 @@ export default function Contact() {
         </div>
 
         <div className={styles.grid}>
-          {/* Kontaktdaten + Karte */}
           <div className={`${styles.info} reveal`}>
             <ul className={styles.details}>
               <li>
@@ -72,8 +111,10 @@ export default function Contact() {
                   <IconMail />
                 </span>
                 <div>
-                  <strong>E-Mail</strong>
-                  <a href={`mailto:${company.email}`}>{company.email}</a>
+                  <strong>E-Mail für Anfragen</strong>
+                  <a href={`mailto:${company.inquiryEmail}`}>
+                    {company.inquiryEmail}
+                  </a>
                 </div>
               </li>
               <li>
@@ -98,23 +139,22 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Formular */}
           <div className={`${styles.formWrap} reveal`}>
-            {sent ? (
+            {status === 'success' ? (
               <div className={styles.success} role="status">
                 <span className={styles.successIcon}>
                   <IconCheck />
                 </span>
                 <h3>Vielen Dank!</h3>
                 <p>
-                  Ihre Anfrage ist auf dem Weg. Sollte sich Ihr E-Mail-Programm
-                  nicht öffnen, erreichen Sie uns direkt unter{' '}
-                  <a href={`tel:${company.phoneHref}`}>{company.phone}</a>.
+                  Ihre Anfrage wurde per E-Mail an uns gesendet. Wir melden uns
+                  schnellstmöglich bei Ihnen – in der Regel innerhalb von 1–2
+                  Werktagen.
                 </p>
                 <button
                   type="button"
                   className="btn btn-outline"
-                  onClick={() => setSent(false)}
+                  onClick={() => setStatus('idle')}
                 >
                   Neue Anfrage
                 </button>
@@ -135,6 +175,22 @@ export default function Contact() {
                     value={form.name}
                     onChange={(e) =>
                       setForm({ ...form, name: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="email">E-Mail *</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    placeholder="Für unsere Antwort"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({ ...form, email: e.target.value })
                     }
                   />
                 </div>
@@ -170,12 +226,29 @@ export default function Contact() {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
-                  Anfrage absenden
+                {status === 'error' && (
+                  <p className={styles.error} role="alert">
+                    Senden fehlgeschlagen. Bitte rufen Sie uns an unter{' '}
+                    <a href={`tel:${company.phoneHref}`}>{company.phone}</a>{' '}
+                    oder schreiben Sie direkt an{' '}
+                    <a href={`mailto:${company.inquiryEmail}`}>
+                      {company.inquiryEmail}
+                    </a>
+                    .
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={status === 'loading'}
+                >
+                  {status === 'loading' ? 'Wird gesendet …' : 'Anfrage absenden'}
                 </button>
                 <p className={styles.note}>
-                  Mit dem Absenden öffnet sich Ihr E-Mail-Programm. Ihre Daten
-                  werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.
+                  Ihre Anfrage wird direkt per E-Mail an uns übermittelt. Ihre
+                  Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage
+                  verwendet.
                 </p>
               </form>
             )}
